@@ -1,14 +1,9 @@
 import React from 'react';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
-import TextField from '@material-ui/core/TextField';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
-import ListItemText from '@material-ui/core/ListItemText';
-import Checkbox from '@material-ui/core/Checkbox';
-import IconButton from '@material-ui/core/IconButton';
-import DeleteIcon from '@material-ui/icons/Delete';
+import TodoForm from './TodoForm.js';
+import TodoList from './TodoList.js'
+
 
 class App extends React.Component {
   constructor(props){
@@ -28,13 +23,45 @@ class App extends React.Component {
   saveTodo = () =>{
     if(this.state.value.trim()){
       this.setState({
-        todos: [...this.state.todos, this.state.value],
+        todos: [...this.state.todos,
+            {
+              value: this.state.value,
+              completed: false
+            }
+        ],
         value:"",
       })
     }
 
   };
 
+deleteTodo =(index) =>{
+  //Imperativo
+  // console.log(index)
+  // var pos= index, n=1;
+  // var todos=[...this.state.todos]
+  // todos.splice(pos,n);
+  // this.setState({
+  //   todos: todos
+  // })
+  //Declarativo
+  this.setState({
+    todos: this.state.todos.filter((_, i) => index !== i)
+  })
+}
+
+isItCheckedBox = (index) =>{
+  // var todos = [...this.state.todos]
+  // todos[index].completed = !todos[index].completed
+  // this.setState({
+  //   todos: todos
+  // })
+  this.setState({
+    todos: this.state.todos.map((todo,i) =>
+      index === i ? {...todo, completed: !todo.completed} : todo
+    )
+  })
+}
 
 
   render(){
@@ -47,45 +74,19 @@ class App extends React.Component {
       </Typography>
       <Grid container justify="center">
         <Grid item >
-          <form
-            onSubmit={e =>{
-              e.preventDefault();
-              this.saveTodo();
-            }}
-            >
-            <TextField
-              label="To do"
-               type="text"
-                placeholder="Next to do...."
-                value={this.state.value}
-                onChange = {this.updateValue}
-
-                />
-
-          </form>
-
+            <TodoForm
+              updateValue={this.updateValue}
+              saveTodo={this.saveTodo}
+              value={this.state.value}
+              />
         </Grid>
       </Grid>
       <Grid container justify="center">
         <Grid item md={8}>
-          <List>
-            {
-              this.state.todos.map((item,index) => {
-                return(
-                  <ListItem button key={index}>
-                    <Checkbox/>
-                    <ListItemText primary= {item}/>
-                    <ListItemSecondaryAction>
-                      <IconButton>
-                        <DeleteIcon/>
-                      </IconButton>
-                    </ListItemSecondaryAction>
-                  </ListItem>
-                )
-              })
-            }
-
-          </List>
+          <TodoList
+            todos={this.state.todos}
+            deleteTodo={this.deleteTodo}
+            isItCheckedBox={this.isItCheckedBox}/>
         </Grid>
       </Grid>
     </React.Fragment>
