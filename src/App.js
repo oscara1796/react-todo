@@ -70,7 +70,7 @@ isItCheckedBox = (index) =>{
       // Con react fragments podemos meter varios nodos
       <React.Fragment>
         <Typography variant= 'h2' align='center' gutterBottom>
-        To-do list
+        Lista de cosas por hacer
       </Typography>
       <Grid container justify="center">
         <Grid item >
